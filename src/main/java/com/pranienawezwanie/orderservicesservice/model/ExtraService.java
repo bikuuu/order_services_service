@@ -1,6 +1,5 @@
 package com.pranienawezwanie.orderservicesservice.model;
 
-import com.sun.xml.bind.v2.model.core.ID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
