@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-@Data // Getter, Setter, ToString, EqualsAndHashCode, RequiredArgsConstructor
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser { // POJO
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
