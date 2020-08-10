@@ -9,11 +9,15 @@
         </property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">password123</property>
+        <property name="connection.password">password</property>
         <property name="hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
 
         <mapping class="com.pranienawezwanie.orderservicesservice.model.AppUser"/>
+        <mapping class="com.pranienawezwanie.orderservicesservice.model.Address"/>
+        <mapping class="com.pranienawezwanie.orderservicesservice.model.ExtraService"/>
+        <mapping class="com.pranienawezwanie.orderservicesservice.model.Service"/>
+        <mapping class="com.pranienawezwanie.orderservicesservice.model.ServiceOrder"/>
 
     </session-factory>
 </hibernate-configuration>

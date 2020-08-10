@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-@Data
+@Data // Getter, Setter, ToString, EqualsAndHashCode, RequiredArgsConstructor
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser {
+public class AppUser { // POJO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +25,11 @@ public class AppUser {
 
     private String phoneNumber;
     private String email;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    private Set<Address> addresses;
+
 
     public AppUser(String firstName, String lastName) {
         this.firstName = firstName;
