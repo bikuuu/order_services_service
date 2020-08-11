@@ -1,8 +1,8 @@
-#Order Services Service
+# Order Services Service
 This application is used for managing of washing services orders. Customers will be able to order washing services for a designated date.
 Application creates automatically services schedule and helps to manage all orders and services schedule. 
  
-##Prerequisites 
+## Prerequisites 
 This project uses following technologies:
 - JDK 11
 - Hibernate
@@ -49,5 +49,5 @@ cd target
 java -jar orderservicesservice.jar
 ```
 
-##Authors
+## Authors
 Szymon Bikowski, Łukasz Stańczuk
