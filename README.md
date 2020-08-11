@@ -3,6 +3,7 @@ This application is used for managing of washing services orders. Customers will
 Application creates automatically services schedule and helps to manage all orders and services schedule. 
  
 ## Prerequisites 
+
 This project uses following technologies:
 - JDK 11
 - Hibernate
