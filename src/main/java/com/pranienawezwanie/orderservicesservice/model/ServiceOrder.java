@@ -1,8 +1,6 @@
 package com.pranienawezwanie.orderservicesservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -26,8 +24,18 @@ public class ServiceOrder {
     private Double price;
 
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Service service;
+
+    @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private  AppUser appUser;
 
     @ManyToMany
     private Set<ExtraService> extraServices;
+
+    @ManyToMany
+    private Set<Address> address;
 }

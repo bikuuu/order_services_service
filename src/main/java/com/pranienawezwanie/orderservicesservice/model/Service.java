@@ -28,7 +28,7 @@ public class Service {
         this.type = type;
     }
 
-    @OneToMany
+    @OneToMany(mappedBy = "service")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<ExtraService> availableExtraServices;

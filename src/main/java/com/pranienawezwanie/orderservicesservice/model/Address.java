@@ -3,6 +3,7 @@ package com.pranienawezwanie.orderservicesservice.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -22,4 +23,7 @@ public class Address {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private AppUser user;
+
+    @ManyToMany(mappedBy = "address")
+    private Set<ServiceOrder> serviceOrders;
 }
