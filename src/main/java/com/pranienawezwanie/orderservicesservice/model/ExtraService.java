@@ -1,13 +1,9 @@
 package com.pranienawezwanie.orderservicesservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -20,4 +16,12 @@ public class ExtraService {
 
     private String name;
     private Double additionalCost;
+
+    @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Service service;
+
+    @ManyToMany(mappedBy = "extraServices")
+    private Set<ServiceOrder> serviceOrders;
 }

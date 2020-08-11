@@ -1,11 +1,9 @@
 package com.pranienawezwanie.orderservicesservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,8 +25,14 @@ public class AppUser {
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Address> addresses;
+
+    @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<ServiceOrder> appUserList;
 
 
     public AppUser(String firstName, String lastName) {
