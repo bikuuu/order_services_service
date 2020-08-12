@@ -23,9 +23,9 @@ public class Services {
     public Services() {
     }
 
-    public double getPrice(){
+    public double getPrice() {
         return price;
-        }
+    }
 
     public String getName() {
         return name;
@@ -64,4 +64,11 @@ public class Services {
                 ", type=" + type +
                 '}';
     }
+    
+        Services washingCoach = new Services("washing the coach", 150.00, 1, ServiceType.WEWNETRZNA);
+        Services washingCarpet = new Services("carpet washing ", 100.00, 1, ServiceType.WEWNETRZNA);
+        Services washingArmchair = new Services("washing the armchair ", 50.00, 1, ServiceType.WEWNETRZNA);
+        Services washingCarUpholstery = new Services("washing car upholestry ", 150.00, 2, ServiceType.ZEWNETRZNA);
+        Services washingMattress = new Services("washing mattress ", 100.00, 1, ServiceType.WEWNETRZNA);
+
 }
