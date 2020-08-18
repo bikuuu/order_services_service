@@ -3,16 +3,23 @@ package com.pranienawezwanie.orderservicesservice.basic;
 import lombok.Data;
 
 
-public class ServiceWithDisinfection extends Services {
-    private static final double DISINFECTION_PRICE = 50.00;
-    private Services services;
-
-    public ServiceWithDisinfection(Services services){
-        this.services= services;
-    }
-    public double getPrice() {
-        return services.getPrice() + DISINFECTION_PRICE;
-    }
+public class ServiceWithDisinfection {
+        private static final double IMPREGNATION_PRICE = 100.00;
+        private Service services;
+        public ServiceWithDisinfection(Service service){
+            this.services =service;
+        }
 
 
+        public double getPrice(Service service) {
+            return service.getPrice() + IMPREGNATION_PRICE;
+        }
+
+        @Override
+        public String toString() {
+            return "ServiceWithImpre{" +
+                    "services=" + services +
+                    '}';
+        }
 }
+

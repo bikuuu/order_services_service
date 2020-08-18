@@ -1,18 +1,23 @@
 package com.pranienawezwanie.orderservicesservice.basic;
 
-import lombok.Data;
 
-
-public class ServiceWithImpregnation extends Services {
+public class ServiceWithImpregnation {
 
     private static final double IMPREGNATION_PRICE = 100.00;
-    private Services services;
-
-    public ServiceWithImpregnation(Services services){
-        this.services= services;
-    }
-    public double getPrice() {
-        return services.getPrice() + IMPREGNATION_PRICE;
+    private Service services;
+    public ServiceWithImpregnation(Service service){
+        this.services =service;
     }
 
+
+    public double getPrice(Service service) {
+        return service.getPrice() + IMPREGNATION_PRICE;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceWithImpre{" +
+                "services=" + services +
+                '}';
+    }
 }
