@@ -3,6 +3,7 @@ package com.pranienawezwanie.orderservicesservice.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -31,10 +32,10 @@ public class Service {
     @OneToMany(mappedBy = "service")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<ExtraService> availableExtraServices;
+    private Set<ExtraService> availableExtraServices = new HashSet<>();
 
     @OneToMany(mappedBy = "service")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<ServiceOrder> orders;
+    private Set<ServiceOrder> orders = new HashSet<>();
 }

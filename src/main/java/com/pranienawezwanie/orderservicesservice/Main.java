@@ -1,5 +1,6 @@
 package com.pranienawezwanie.orderservicesservice;
 
+
 import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
@@ -8,6 +9,7 @@ import com.pranienawezwanie.orderservicesservice.model.AppUser;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         System.out.println("Initial version.");
         Scanner scanner = new Scanner(System.in);
@@ -51,6 +53,7 @@ public class Main {
 
             appUserEntityDao.saveOrUpdate(appUser);
             System.out.println("User saved: " + appUser.getId());
+
         } else {
             System.err.println("User cannot be saved. Login already exists.");
         }
@@ -62,5 +65,7 @@ public class Main {
                 .findAll(AppUser.class)
                 .forEach(System.out::println);
     }
-
 }
+
+
+

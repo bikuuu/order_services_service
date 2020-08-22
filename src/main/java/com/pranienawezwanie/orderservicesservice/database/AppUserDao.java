@@ -17,38 +17,16 @@ public class AppUserDao {
 
         SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
         try (Session session = sessionFactory.openSession()) {
-
-            // narzędzie do tworzenia zapytań i kreowania klauzuli 'where'
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-
-            // obiekt reprezentujący zapytanie
-            CriteriaQuery<AppUser> criteriaQuery = cb.createQuery(AppUser.class);
-
-            // obiekt reprezentujący tabelę bazodanową.
-            // do jakiej tabeli kierujemy nasze zapytanie?
+            CriteriaBuilder cb = session.getCriteriaBuilder();      
+            CriteriaQuery<AppUser> criteriaQuery = cb.createQuery(AppUser.class);        
             Root<AppUser> rootTable = criteriaQuery.from(AppUser.class);
-
-            // wykonanie zapytania
+         
             criteriaQuery
-                    .select(rootTable) // select * from rootTable
+                    .select(rootTable) 
                     .where(
                             cb.equal(rootTable.get("login"), searchedLogin)
                     );
-//            criteriaQuery
-//                    .select(rootTable)
-//                    .where(
-//                            cb.and(
-//                                    cb.equal(rootTable.get("firstName"), searchedFirstName ),
-//                                    cb.equal(rootTable.get("lastName"), searchedLastName )
-//                            )
-//                    ).orderBy(cb.asc(rootTable.get("firstName")));
-
-            // specification
             list.addAll(session.createQuery(criteriaQuery).list());
-
-            // poznanie uniwersalnego rozwiązania które działa z każdą bazą danych
-            // używanie klas których będziecie używać na JPA (Spring)
-
         } catch (HibernateException he) {
             he.printStackTrace();
         }
