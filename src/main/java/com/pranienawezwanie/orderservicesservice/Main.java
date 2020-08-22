@@ -1,5 +1,6 @@
 package com.pranienawezwanie.orderservicesservice;
 
+import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
 
@@ -14,8 +15,11 @@ public class Main {
 
         do {
             System.out.println("Wprowadz komende: ");
+            printAllOptions();
             command = scanner.nextLine();
+
             String[] words = command.split(" ");
+
 
             // user list
             if (words[0].equalsIgnoreCase("user") &&
@@ -28,8 +32,27 @@ public class Main {
         } while (!command.equalsIgnoreCase("quit"));
     }
 
-    private static void handleAddUser(String[] words) {
+    private static void printAllOptions() {
+        System.out.println("- [user list] ");
+        System.out.println("- [user add {name} {surname} {login} {password}] ");
+    }
 
+    private static void handleAddUser(String[] words) {
+        AppUserDao appUserDao = new AppUserDao();
+        EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
+        if (!appUserDao.existsUserWithLogin(words[4])) {
+            AppUser appUser = AppUser.builder()
+                    .firstName(words[2])
+                    .lastName(words[3])
+                    .login(words[4])
+                    .password(words[5])
+                    .build();
+
+            appUserEntityDao.saveOrUpdate(appUser);
+            System.out.println("User saved: " + appUser.getId());
+        } else {
+            System.err.println("User cannot be saved. Login already exists.");
+        }
     }
 
     private static void handleListUsers(String[] words) {
