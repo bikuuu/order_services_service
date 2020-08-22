@@ -25,6 +25,9 @@ public class AppUser {
     private String phoneNumber;
     private String email;
 
+    @Enumerated(value = EnumType.STRING)
+    private UserType userType = UserType.USER;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -34,7 +37,6 @@ public class AppUser {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<ServiceOrder> appUserList;
-
 
     public AppUser(String firstName, String lastName) {
         this.firstName = firstName;

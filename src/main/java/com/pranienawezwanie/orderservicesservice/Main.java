@@ -2,16 +2,23 @@ package com.pranienawezwanie.orderservicesservice;
 
 import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
+import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
+import com.pranienawezwanie.orderservicesservice.model.Address;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
+import com.pranienawezwanie.orderservicesservice.model.UserType;
 
 
+import javax.swing.text.html.parser.Entity;
+import java.sql.SQLOutput;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Initial version.");
         Scanner scanner = new Scanner(System.in);
-
+        UserHandler userHandler = new UserHandler();
         String command;
 
         do {
@@ -23,44 +30,20 @@ public class Main {
 
 
             // user list
-            if (words[0].equalsIgnoreCase("user") &&
-                    words[1].equalsIgnoreCase("list")) {
-                handleListUsers(words);
-            } else if (words[0].equalsIgnoreCase("user") &&
-                    words[1].equalsIgnoreCase("add")) {
-                handleAddUser(words);
+            if (words[0].equalsIgnoreCase("user")) {
+                userHandler.handle(words);
             }
+
+
         } while (!command.equalsIgnoreCase("quit"));
     }
 
     private static void printAllOptions() {
         System.out.println("- [user list] ");
         System.out.println("- [user add {name} {surname} {login} {password}] ");
+        System.out.println("- [user type change {userId} {userType}] ");
     }
 
-    private static void handleAddUser(String[] words) {
-        AppUserDao appUserDao = new AppUserDao();
-        EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
-        if (!appUserDao.existsUserWithLogin(words[4])) {
-            AppUser appUser = AppUser.builder()
-                    .firstName(words[2])
-                    .lastName(words[3])
-                    .login(words[4])
-                    .password(words[5])
-                    .build();
 
-            appUserEntityDao.saveOrUpdate(appUser);
-            System.out.println("User saved: " + appUser.getId());
-        } else {
-            System.err.println("User cannot be saved. Login already exists.");
-        }
-    }
-
-    private static void handleListUsers(String[] words) {
-        EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
-        appUserEntityDao
-                .findAll(AppUser.class)
-                .forEach(System.out::println);
-    }
 
 }

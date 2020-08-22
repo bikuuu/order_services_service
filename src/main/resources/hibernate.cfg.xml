@@ -18,6 +18,7 @@
         <mapping class="com.pranienawezwanie.orderservicesservice.model.ExtraService"/>
         <mapping class="com.pranienawezwanie.orderservicesservice.model.Service"/>
         <mapping class="com.pranienawezwanie.orderservicesservice.model.ServiceOrder"/>
+        <mapping class="com.pranienawezwanie.orderservicesservice.model.Schedule"/>
 
     </session-factory>
 </hibernate-configuration>

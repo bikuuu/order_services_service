@@ -22,5 +22,5 @@ public class Schedule {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "schedule")
-    private Order order;
+    private ServiceOrder serviceOrder;
 }

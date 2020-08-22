@@ -39,6 +39,6 @@ public class ServiceOrder {
     @ManyToMany
     private Set<Address> address;
 
-    @OneToOne
+    @OneToOne(mappedBy = "serviceOrder")
     private Schedule schedule;
 }
