@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -34,10 +35,10 @@ public class ServiceOrder {
     private  AppUser appUser;
 
     @ManyToMany
-    private Set<ExtraService> extraServices;
+    private Set<ExtraService> extraServices = new HashSet<>();
 
     @ManyToMany
-    private Set<Address> address;
+    private Set<Address> address = new HashSet<>();
 
     @OneToOne(mappedBy = "serviceOrder")
     private Schedule schedule;

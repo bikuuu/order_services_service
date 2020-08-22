@@ -3,6 +3,7 @@ package com.pranienawezwanie.orderservicesservice.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -26,5 +27,5 @@ public class Address {
     private AppUser user;
 
     @ManyToMany(mappedBy = "address")
-    private Set<ServiceOrder> serviceOrders;
+    private Set<ServiceOrder> serviceOrders = new HashSet<>();
 }

@@ -3,11 +3,13 @@ package com.pranienawezwanie.orderservicesservice.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -31,7 +33,7 @@ public class AppUser {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Address> addresses;
+    private Set<Address> addresses= new HashSet<>();
 
     @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
     @ToString.Exclude
