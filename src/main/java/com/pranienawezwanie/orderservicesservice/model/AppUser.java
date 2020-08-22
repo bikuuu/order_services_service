@@ -12,6 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,8 +4,7 @@ package com.pranienawezwanie.orderservicesservice;
 import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
-import com.pranienawezwanie.orderservicesservice.model.Service;
-import com.pranienawezwanie.orderservicesservice.model.ServiceType;
+
 
 import java.util.Scanner;
 
@@ -21,8 +20,7 @@ public class Main {
             System.out.println("Wprowadz komende: ");
             printAllOptions();
             command = scanner.nextLine();
-            // serwis aukcyjny allegro
-            // words = { "serwis", "aukcyjny", "allegro"}
+
             String[] words = command.split(" ");
 
 
@@ -55,7 +53,8 @@ public class Main {
 
             appUserEntityDao.saveOrUpdate(appUser);
             System.out.println("User saved: " + appUser.getId());
-        }else{
+
+        } else {
             System.err.println("User cannot be saved. Login already exists.");
         }
     }
