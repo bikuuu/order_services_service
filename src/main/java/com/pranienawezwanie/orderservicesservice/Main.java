@@ -1,11 +1,9 @@
 package com.pranienawezwanie.orderservicesservice;
 
-
 import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
-import com.pranienawezwanie.orderservicesservice.model.Service;
-import com.pranienawezwanie.orderservicesservice.model.ServiceType;
+
 
 import java.util.Scanner;
 
