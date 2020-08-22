@@ -38,4 +38,7 @@ public class ServiceOrder {
 
     @ManyToMany
     private Set<Address> address;
+
+    @OneToOne
+    private Schedule schedule;
 }
