@@ -26,4 +26,9 @@ public class ExtraService {
 
     @ManyToMany(mappedBy = "extraServices")
     private Set<ServiceOrder> serviceOrders = new HashSet<>();
+
+    public ExtraService(String name, Double additionalCost) {
+        this.name = name;
+        this.additionalCost = additionalCost;
+    }
 }

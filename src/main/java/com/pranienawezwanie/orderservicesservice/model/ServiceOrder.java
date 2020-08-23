@@ -42,4 +42,5 @@ public class ServiceOrder {
 
     @OneToOne
     private Schedule schedule;
+
 }

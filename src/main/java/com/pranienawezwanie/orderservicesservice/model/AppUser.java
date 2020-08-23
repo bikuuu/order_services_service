@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class AppUser {
     @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<ServiceOrder> serviceOrderList;
+    private Set<ServiceOrder> serviceOrders;
 
     public AppUser(String firstName, String lastName) {
         this.firstName = firstName;
