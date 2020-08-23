@@ -24,11 +24,10 @@ public class Main {
         boolean status = false;
 
         do {
-            System.out.println("Wprowadź komendę [login user/register user]: ");
+            System.out.println("Wprowadź komendę [login/register]: ");
             command = scanner.nextLine();
             words = command.split(" ");
-            if (words[0].equalsIgnoreCase("login") &&
-                    words[1].equalsIgnoreCase("user")) {
+            if (words[0].equalsIgnoreCase("login")) {
                 boolean checker = false;
                 System.out.println("Podaj login i hasło: {login} {password}");
                 command = scanner.nextLine();
@@ -45,13 +44,16 @@ public class Main {
                     }
                 } while (checker == true);
                 status = true;
-            } else if (words[0].equalsIgnoreCase("register") &&
-                    words[1].equalsIgnoreCase("user")) {
+                System.out.println("Witaj, " + words[0]);
 
+            } else if (words[0].equalsIgnoreCase("register")) {
+                System.out.println("- [user add {name} {surname} {login} {password}] ");
+                command = scanner.nextLine();
+                words = command.split(" ");
+                userHandler.handle(words);
+                System.out.println("Witaj, " + words[2]);
             }
         } while (status == true);
-
-        System.out.println("Witaj, " + words[0]);
 
         do {
             System.out.println("Wprowadź komendę: ");
