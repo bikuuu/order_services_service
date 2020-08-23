@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,7 +16,7 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime date;
+    private LocalDate date;
     private Integer slotNumber;
     private Integer duration;
 

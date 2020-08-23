@@ -1,40 +1,76 @@
 package com.pranienawezwanie.orderservicesservice;
 
 
-import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
-import com.pranienawezwanie.orderservicesservice.database.ServiceDao;
 import com.pranienawezwanie.orderservicesservice.handlers.ExtraServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.ServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
 import com.pranienawezwanie.orderservicesservice.model.*;
+import com.pranienawezwanie.orderservicesservice.database.HibernateUtil;
+import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
+import com.pranienawezwanie.orderservicesservice.model.ExtraService;
+import com.pranienawezwanie.orderservicesservice.model.Service;
+import com.pranienawezwanie.orderservicesservice.model.ServiceType;
 
-
-import javax.swing.text.html.parser.Entity;
-import java.sql.SQLOutput;
 import java.util.*;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
 
 public class Main {
     private final static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        HibernateUtil.getOurSessionFactory();
         System.out.println("Initial version.");
         Scanner scanner = new Scanner(System.in);
         UserHandler userHandler = new UserHandler();
         ServiceHandler serviceHandler = new ServiceHandler();
         ExtraServiceHandler extraServiceHandler = new ExtraServiceHandler();
+
+        String[] words;
         String command;
+        boolean status = false;
 
         do {
-            System.out.println("Wprowadz komende: ");
+            System.out.println("Wprowadź komendę [login/register]: ");
+            command = scanner.nextLine();
+            words = command.split(" ");
+            if (words[0].equalsIgnoreCase("login")) {
+                boolean checker = false;
+                System.out.println("Podaj login i hasło: {login} {password}");
+                command = scanner.nextLine();
+                do {
+                    checker = userHandler.login(words);
+                    if (checker == false) {
+                        System.out.println("Nieprawidłowy login lub hasło, spróbuj ponownie " +
+                                "lub wybierz zarejestruj nowego użytkownika podając register");
+                        try {
+                            TimeUnit.SECONDS.sleep(3);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } while (checker == true);
+                status = true;
+                System.out.println("Witaj, " + words[0]);
+
+            } else if (words[0].equalsIgnoreCase("register")) {
+                System.out.println("- [user add {name} {surname} {login} {password}] ");
+                command = scanner.nextLine();
+                words = command.split(" ");
+                userHandler.handle(words);
+                System.out.println("Witaj, " + words[2]);
+            }
+        } while (status == true);
+
+        do {
+            System.out.println("Wprowadź komendę: ");
             printAllOptions();
             command = scanner.nextLine();
-
-            String[] words = command.split(" ");
-
-
-            // user list
+            words = command.split(" ");
+           
             if (words[0].equalsIgnoreCase("user")) {
                 userHandler.handle(words);
             } else if (words[0].equalsIgnoreCase("service")) {
@@ -45,10 +81,9 @@ public class Main {
                         words[1].equalsIgnoreCase("add")) {
                     handleAddOrder(words);
             }
-
-
         } while (!command.equalsIgnoreCase("quit"));
     }
+
 
 
     private static void handleAddOrder(String[] words) {
@@ -72,6 +107,17 @@ public class Main {
                 serviceOrder.setService(service);
                 serviceOrder.setExtraServices(extraServices);
 
+    private static void handleAddExtraService(String[] words) {
+        EntityDao<ExtraService> appServiceEntityDao = new EntityDao<>();
+        ExtraService extraService = ExtraService.builder()
+                .name(words[2])
+                .additionalCost(Double.valueOf(words[3]))
+                .build();
+
+        appServiceEntityDao.saveOrUpdate(extraService);
+        System.out.println(" Extra service aded " + extraService.getId());
+
+
                 serviceOrderEntityDao.saveOrUpdate(serviceOrder);
 
             } else {
@@ -86,7 +132,6 @@ public class Main {
     }
     private static Set<ExtraService> getAllExtraServicesFromUser(Service service) {
         List<ExtraService> extraServices = new ArrayList<>();
-
         String input;
         do {
             System.out.println("Extra services, enter id:");
@@ -106,8 +151,6 @@ public class Main {
                 input.startsWith("t"));
         return new HashSet<>(extraServices);
     }
-
-
 
     private static Optional<Service> askUserForService(List<Service> allServicesByName, EntityDao<Service> serviceEntityDao) {
         List<Service> serviceList = allServicesByName;

@@ -22,18 +22,27 @@ public class UserHandler {
         } else if (words[1].equalsIgnoreCase("type") &&
                 words[2].equalsIgnoreCase("change")) {
             handleChangeUserType(words);
-        }else if (words[1].equalsIgnoreCase("addaddress")) {
+        } else if (words[1].equalsIgnoreCase("addaddress")) {
             handleAddAddress(words);
+        } else if (words[1].equalsIgnoreCase("login")) {
+            login(words);
         }
     }
 
+    public boolean login(String[] words) {
+        AppUserDao appUserDao = new AppUserDao();
+        if (appUserDao.existsUserWithLogin(words[0]) && appUserDao.passwordChecker(words)) {
+            return true;
+        }
+        return false;
+    }
+
+
     private void handleAddAddress(String[] words) {
-        // 2 - id
-        // 3 -
         Long id = Long.parseLong(words[2]);
         Optional<AppUser> appUserOptional = appUserEntityDao.findById(AppUser.class, id);
 
-        if(appUserOptional.isPresent()) {
+        if (appUserOptional.isPresent()) {
             EntityDao<Address> addressEntityDao = new EntityDao<>();
             AppUser appUser = appUserOptional.get();
 
@@ -49,12 +58,6 @@ public class UserHandler {
         }
     }
 
-    private static void handleAddAddress(String[] words, AppUser appUser) {
-        //TODO: Rozwiazać problem  z nazwa miasta,ulicy, naziwska wieloczłonowe
-
-        System.out.println("Add new address to user: " + appUser.getId());
-    }
-
     private void handleAddUser(String[] words) {
         AppUserDao appUserDao = new AppUserDao();
         AppUser appUser;
@@ -64,7 +67,6 @@ public class UserHandler {
                     .lastName(words[3])
                     .login(words[4])
                     .password(words[5])
-                    .userType(UserType.USER)
                     .build();
             appUserEntityDao.saveOrUpdate(appUser);
             System.out.println("User saved: " + appUser.getId());
@@ -74,14 +76,12 @@ public class UserHandler {
     }
 
     private void handleChangeUserType(String[] word) {
-        //3,4
         Long identifier = Long.parseLong(word[3]);
 
         Optional<AppUser> optionalAppUser = appUserEntityDao.findById(AppUser.class, identifier);
         if (optionalAppUser.isPresent()) {
             AppUser appUser = optionalAppUser.get();
             appUser.setUserType(UserType.valueOf(word[4].toUpperCase()));
-
             appUserEntityDao.saveOrUpdate(appUser);
         }
     }

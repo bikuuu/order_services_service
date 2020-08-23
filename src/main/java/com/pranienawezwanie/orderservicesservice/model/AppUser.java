@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -33,7 +32,7 @@ public class AppUser {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Address> addresses= new HashSet<>();
+    private Set<Address> addresses = new HashSet<>();
 
     @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
     @ToString.Exclude

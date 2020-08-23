@@ -37,6 +37,16 @@ public class EntityDao<T> {
         return Optional.empty();
     }
 
+    public Optional<T> findByLogin(Class<T> classType, String login) {
+        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.get(classType, login));
+        } catch (HibernateException he) {
+            he.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
     public void delete(T entity) {
         SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
         Transaction transaction = null;
