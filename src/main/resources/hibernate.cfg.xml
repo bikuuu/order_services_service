@@ -11,7 +11,7 @@
         <property name="connection.username">root</property>
         <property name="connection.password">password</property>
         <property name="hbm2ddl.auto">update</property>
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
 
 
         <mapping class="com.pranienawezwanie.orderservicesservice.model.AppUser"/>
@@ -20,14 +20,6 @@
         <mapping class="com.pranienawezwanie.orderservicesservice.model.Service"/>
         <mapping class="com.pranienawezwanie.orderservicesservice.model.ServiceOrder"/>
         <mapping class="com.pranienawezwanie.orderservicesservice.model.Schedule"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.handlers.ExtraServiceHandler"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.handlers.UserHandler"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.database.AppUserDao"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.database.EntityDao"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.database.ServiceDao"/>
-        <mapping class="com.pranienawezwanie.orderservicesservice.database.HibernateUtil"/>
-
-
 
 
     </session-factory>

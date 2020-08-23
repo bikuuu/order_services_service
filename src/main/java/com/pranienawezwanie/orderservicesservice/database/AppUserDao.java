@@ -3,6 +3,7 @@ package com.pranienawezwanie.orderservicesservice.database;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
 import org.hibernate.*;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -33,18 +34,4 @@ public class AppUserDao {
         }
         return !list.isEmpty();
     }
-
-    public boolean passwordChecker(String[] words) {
-        String login = words[1];
-
-        Optional<AppUser> optionalAppUser = appUserEntityDao.findByLogin(AppUser.class, login);
-        if (optionalAppUser.isPresent()) {
-            AppUser appUser = optionalAppUser.get();
-            if (appUser.getPassword().equals(words[2])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

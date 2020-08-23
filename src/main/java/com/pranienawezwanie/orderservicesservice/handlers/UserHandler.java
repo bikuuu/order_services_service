@@ -24,19 +24,8 @@ public class UserHandler {
             handleChangeUserType(words);
         } else if (words[1].equalsIgnoreCase("addaddress")) {
             handleAddAddress(words);
-        } else if (words[1].equalsIgnoreCase("login")) {
-            login(words);
         }
     }
-
-    public boolean login(String[] words) {
-        AppUserDao appUserDao = new AppUserDao();
-        if (appUserDao.existsUserWithLogin(words[0]) && appUserDao.passwordChecker(words)) {
-            return true;
-        }
-        return false;
-    }
-
 
     private void handleAddAddress(String[] words) {
         Long id = Long.parseLong(words[2]);
@@ -67,6 +56,7 @@ public class UserHandler {
                     .lastName(words[3])
                     .login(words[4])
                     .password(words[5])
+                    .userType(UserType.USER)
                     .build();
             appUserEntityDao.saveOrUpdate(appUser);
             System.out.println("User saved: " + appUser.getId());
