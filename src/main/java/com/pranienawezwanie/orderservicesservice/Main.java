@@ -1,7 +1,8 @@
 package com.pranienawezwanie.orderservicesservice;
 
-
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
+import com.pranienawezwanie.orderservicesservice.database.ScheduleDao;
+import com.pranienawezwanie.orderservicesservice.database.ServiceDao;
 import com.pranienawezwanie.orderservicesservice.handlers.ExtraServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.ServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
@@ -10,14 +11,16 @@ import com.pranienawezwanie.orderservicesservice.database.HibernateUtil;
 import com.pranienawezwanie.orderservicesservice.model.ExtraService;
 import com.pranienawezwanie.orderservicesservice.model.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
 public class Main {
     private final static Scanner scanner = new Scanner(System.in);
+    private static final int WORK_START_TIME = 8;
+    private static final int WORK_HOURS = 8;
 
     public static void main(String[] args) {
         HibernateUtil.getOurSessionFactory();
@@ -78,8 +81,45 @@ public class Main {
             } else if (words[0].equalsIgnoreCase("order") &&
                     words[1].equalsIgnoreCase("add")) {
                 handleAddOrder(words);
+            } else if (words[0].equalsIgnoreCase("schedule") &&
+                    words[1].equalsIgnoreCase("add")) {
+                handleScheduleAdd(words);
+            } else if (words[0].equalsIgnoreCase("schedule") &&
+                    words[1].equalsIgnoreCase("available")) {
+                handleScheduleShowAvailable(words);
             }
         } while (!command.equalsIgnoreCase("quit"));
+    }
+
+    private static void handleScheduleShowAvailable(String[] words) {
+        EntityDao<Schedule> scheduleEntityDao = new EntityDao<>();
+        EntityDao<ServiceOrder> serviceOrderEntityDao = new EntityDao<>();
+
+        ScheduleDao scheduleDao1 = new ScheduleDao();
+        // yyyy-MM-dd
+        List<Schedule> schedulesByDate = scheduleDao1.findSchedulesByDate(LocalDate.parse(words[2]));
+
+        int scheduleIt = 0;
+        for (int i = 0; i < WORK_HOURS; i++) {
+            Schedule schedule = schedulesByDate.get(scheduleIt);
+            if(schedule.getSlotNumber() == i){
+                System.out.println("Godzina " + (WORK_START_TIME + i) + " zajęty "/* + schedule.getServiceOrder().getService().getName()*/);
+                scheduleIt++;
+            }else{
+                System.out.println("Godzina " + (WORK_START_TIME + i) + " wolny.");
+            }
+        }
+    }
+
+    private static void handleScheduleAdd(String[] words) {
+        EntityDao<Schedule> scheduleEntityDao = new EntityDao<>();
+        Schedule schedule = Schedule.builder().
+                date(LocalDate.parse(words[2]))
+                .duration(Integer.valueOf(words[3]))
+                .slotNumber(Integer.valueOf(words[4]))
+                .build();
+
+        scheduleEntityDao.saveOrUpdate(schedule);
     }
 
     private static void handleAddOrder(String[] words) {
@@ -154,6 +194,7 @@ public class Main {
         System.out.println("- [service list] ");
         System.out.println("- [service add {name} {price} {duration} {type}] ");
         System.out.println("- [extraService add {name} {additionalCost}] ");
+        System.out.println("- [schedule available yyyy-MM-dd ");
         System.out.println("- [order add]");
     }
 
