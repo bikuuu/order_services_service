@@ -40,6 +40,6 @@ public class ServiceOrder {
     @ManyToMany
     private Set<Address> address = new HashSet<>();
 
-    @OneToOne(mappedBy = "serviceOrder")
+    @OneToOne
     private Schedule schedule;
 }
