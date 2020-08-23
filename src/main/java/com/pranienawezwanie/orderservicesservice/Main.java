@@ -95,13 +95,15 @@ public class Main {
         List<Schedule> schedulesByDate = scheduleDao1.findSchedulesByDate(LocalDate.parse(words[2]));
 
         int scheduleIt = 0;
-        for (int i = 0; i < WORK_HOURS; i++) {
+        for (int i = 0; i < WORK_HOURS; ) {
             Schedule schedule = schedulesByDate.get(scheduleIt);
             if(schedule.getSlotNumber() == i){
-                System.out.println("Godzina " + (WORK_START_TIME + i) + " zajęty "/* + schedule.getServiceOrder().getService().getName()*/);
+                System.out.println("Godzina " + (WORK_START_TIME + i) + " zajęty przez " + schedule.getDuration() + "h"/* + schedule.getServiceOrder().getService().getName()*/);
+                i+=schedule.getDuration();
                 scheduleIt++;
             }else{
                 System.out.println("Godzina " + (WORK_START_TIME + i) + " wolny.");
+                i++;
             }
         }
     }
