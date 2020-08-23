@@ -3,26 +3,27 @@ package com.pranienawezwanie.orderservicesservice;
 
 import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
+import com.pranienawezwanie.orderservicesservice.database.ServiceDao;
+import com.pranienawezwanie.orderservicesservice.handlers.ExtraServiceHandler;
+import com.pranienawezwanie.orderservicesservice.handlers.ServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
-import com.pranienawezwanie.orderservicesservice.model.Address;
-import com.pranienawezwanie.orderservicesservice.model.AppUser;
-import com.pranienawezwanie.orderservicesservice.model.ExtraService;
-import com.pranienawezwanie.orderservicesservice.model.Service;
-import com.pranienawezwanie.orderservicesservice.model.ServiceType;
+import com.pranienawezwanie.orderservicesservice.model.*;
 
 
 import javax.swing.text.html.parser.Entity;
 import java.sql.SQLOutput;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
+    private final static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         System.out.println("Initial version.");
         Scanner scanner = new Scanner(System.in);
         UserHandler userHandler = new UserHandler();
+        ServiceHandler serviceHandler = new ServiceHandler();
+        ExtraServiceHandler extraServiceHandler = new ExtraServiceHandler();
         String command;
 
         do {
@@ -36,61 +37,87 @@ public class Main {
             // user list
             if (words[0].equalsIgnoreCase("user")) {
                 userHandler.handle(words);
-            } else if (words[0].equalsIgnoreCase("service") &&
-                    words[1].equalsIgnoreCase("list")) {
-                handleService(words);
-            }else if (words[0].equalsIgnoreCase("service") &&
-                    words[1].equalsIgnoreCase("add")) {
-                handleAddService(words);
-            }else if (words[0].equalsIgnoreCase("ExtraService") &&
-                    words[1].equalsIgnoreCase("add")) {
-                handleAddExtraService(words);
-            }else if (words[0].equalsIgnoreCase("ExtraService") &&
-                    words[1].equalsIgnoreCase("list")) {
-                handleExtraService(words);
+            } else if (words[0].equalsIgnoreCase("service")) {
+                  serviceHandler.handle(words);
+            }else if (words[0].equalsIgnoreCase("extraService")){
+                extraServiceHandler.handle(words);
+            }else if (words[0].equalsIgnoreCase("order") &&
+                        words[1].equalsIgnoreCase("add")) {
+                    handleAddOrder(words);
             }
 
 
         } while (!command.equalsIgnoreCase("quit"));
     }
 
-    private static void handleExtraService(String[] words) {
-        EntityDao<ExtraService> appUserEntityDao = new EntityDao<>();
-        appUserEntityDao
-                .findAll(ExtraService.class)
-                .forEach(System.out::println);
+
+    private static void handleAddOrder(String[] words) {
+        EntityDao<ServiceOrder> serviceOrderEntityDao = new EntityDao<>();
+        EntityDao<Service> serviceEntityDao = new EntityDao<>();
+        EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
+        EntityDao<ExtraService> extraServiceEntityDao = new EntityDao<>();
+
+        Long id = Long.parseLong(words[2]); // id uzytkownika
+        Optional<AppUser> appUserOptional = appUserEntityDao.findById(AppUser.class, id);
+        if (appUserOptional.isPresent()) { // uzytkownik istnieje
+            AppUser appUser = appUserOptional.get();
+
+            Optional<Service> optionalService = askUserForService(serviceEntityDao.findAll(Service.class), serviceEntityDao);
+            ServiceOrder serviceOrder;
+            if (optionalService.isPresent()) {
+                Service service = optionalService.get();
+
+                Set<ExtraService> extraServices = getAllExtraServicesFromUser(service);
+                serviceOrder = new ServiceOrder();
+                serviceOrder.setService(service);
+                serviceOrder.setExtraServices(extraServices);
+
+                serviceOrderEntityDao.saveOrUpdate(serviceOrder);
+
+            } else {
+                System.err.println("Service does not exist");
+                return;
+            }
+            appUser.getServiceOrders().add(serviceOrder);
+            appUserEntityDao.saveOrUpdate(appUser);
+        } else {
+            System.err.println("User does not exist");
+        }
+    }
+    private static Set<ExtraService> getAllExtraServicesFromUser(Service service) {
+        List<ExtraService> extraServices = new ArrayList<>();
+
+        String input;
+        do {
+            System.out.println("Extra services, enter id:");
+            service.getAvailableExtraServices().forEach(System.out::println);
+
+            Long id = Long.valueOf(scanner.nextLine());
+            extraServices.addAll(
+                    service.getAvailableExtraServices().stream()
+                            .filter(extraService -> extraService.getId() == id)
+                            .collect(Collectors.toSet()));
+            System.out.println("Czy chcesz dodać kolejne usługi? [y/n]");
+            input = scanner.nextLine();
+
+        } while (input.equalsIgnoreCase("y") ||
+                input.equalsIgnoreCase("t") ||
+                input.startsWith("y") ||
+                input.startsWith("t"));
+        return new HashSet<>(extraServices);
     }
 
-    private static void handleAddExtraService(String[] words) {
-            EntityDao<ExtraService> appServiceEntityDao = new EntityDao<>();
-            ExtraService extraService = ExtraService.builder()
-                    .name(words[2])
-                    .additionalCost(Double.valueOf(words[3]))
-                    .build();
 
-            appServiceEntityDao.saveOrUpdate(extraService);
-            System.out.println(" Extra service aded "+extraService.getId());
 
-    }
+    private static Optional<Service> askUserForService(List<Service> allServicesByName, EntityDao<Service> serviceEntityDao) {
+        List<Service> serviceList = allServicesByName;
+        System.out.println("To znalezione wyniki, którą usługę wybierasz:");
+        serviceList.forEach(System.out::println);
+        System.out.println();
+        System.out.println("Wprowadź ID:");
 
-    private static void handleAddService(String[] words) {
-        EntityDao<Service> appServiceEntityDao = new EntityDao<>();
-        Service service = Service.builder()
-                .name(words[2])
-                .price(Double.valueOf(words[3]))
-                .duration(Integer.valueOf(words[4]))
-                .type(ServiceType.valueOf(words[5]))
-                .build();
-
-        appServiceEntityDao.saveOrUpdate(service);
-        System.out.println("Service aded "+service.getId());
-    }
-
-    private static void handleService(String[] words) {
-        EntityDao<Service> appUserEntityDao = new EntityDao<>();
-        appUserEntityDao
-                .findAll(Service.class)
-                .forEach(System.out::println);
+        Long id = Long.parseLong(scanner.nextLine()); // id uzytkownika
+        return serviceEntityDao.findById(Service.class, id);
     }
 
     private static void printAllOptions() {
@@ -98,9 +125,10 @@ public class Main {
         System.out.println("- [user add {name} {surname} {login} {password}] ");
         System.out.println("- [user type change {userId} {userType}] ");
         System.out.println("- [service list] ");
-        System.out.println("- [add service {name} {price} {duration} {type}] ");
-        System.out.println("- [service list] ");
-        System.out.println("- [add extra service {name} {additionalCost}] ");
+        System.out.println("- [service add {name} {price} {duration} {type}] ");
+        System.out.println("- [extraService add {name} {additionalCost}] ");
+        System.out.println("- [order add]");
+
     }
 }
 
