@@ -1,7 +1,8 @@
 package com.pranienawezwanie.orderservicesservice;
 
-
+import com.pranienawezwanie.orderservicesservice.database.AppUserDao;
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
+import com.pranienawezwanie.orderservicesservice.database.LoginDao;
 import com.pranienawezwanie.orderservicesservice.handlers.ExtraServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.ServiceHandler;
 import com.pranienawezwanie.orderservicesservice.handlers.UserHandler;
@@ -25,33 +26,24 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         UserHandler userHandler = new UserHandler();
         ServiceHandler serviceHandler = new ServiceHandler();
+        AppUserDao appUserDao = new AppUserDao();
+        LoginDao loginDao = new LoginDao();
         ExtraServiceHandler extraServiceHandler = new ExtraServiceHandler();
+        AppUser loggedInUser = null;
 
-        String[] words;
         String command;
-        boolean status = false;
-
         do {
             System.out.println("Wprowadź komendę [login/register]: ");
             command = scanner.nextLine();
-            words = command.split(" ");
+            String[] words = command.split(" ");
             if (words[0].equalsIgnoreCase("login")) {
-                boolean checker = false;
                 System.out.println("Podaj login i hasło: {login} {password}");
                 command = scanner.nextLine();
-                do {
-                    checker = userHandler.login(words);
-                    if (checker == false) {
-                        System.out.println("Nieprawidłowy login lub hasło, spróbuj ponownie " +
-                                "lub wybierz zarejestruj nowego użytkownika podając register");
-                        try {
-                            TimeUnit.SECONDS.sleep(3);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } while (checker == true);
-                status = true;
+                words = command.split(" ");
+                Optional<AppUser> appUserOptional = loginDao.findByLogin(words[0], words[1]);
+                if (appUserOptional.isPresent()) {
+                    loggedInUser = appUserOptional.get();
+                }
                 System.out.println("Witaj, " + words[0]);
 
             } else if (words[0].equalsIgnoreCase("register")) {
@@ -60,14 +52,20 @@ public class Main {
                 words = command.split(" ");
                 userHandler.handle(words);
                 System.out.println("Witaj, " + words[2]);
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
-        } while (status == true);
+        } while (loggedInUser == null);
 
         do {
             System.out.println("Wprowadź komendę: ");
             printAllOptions();
             command = scanner.nextLine();
-            words = command.split(" ");
+            String[] words = command.split(" ");
 
             if (words[0].equalsIgnoreCase("user")) {
                 userHandler.handle(words);
@@ -88,9 +86,9 @@ public class Main {
         EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
         EntityDao<ExtraService> extraServiceEntityDao = new EntityDao<>();
 
-        Long id = Long.parseLong(words[2]); // id uzytkownika
+        Long id = Long.parseLong(words[2]);
         Optional<AppUser> appUserOptional = appUserEntityDao.findById(AppUser.class, id);
-        if (appUserOptional.isPresent()) { // uzytkownik istnieje
+        if (appUserOptional.isPresent()) {
             AppUser appUser = appUserOptional.get();
 
             Optional<Service> optionalService = askUserForService(serviceEntityDao.findAll(Service.class), serviceEntityDao);
@@ -143,7 +141,7 @@ public class Main {
         System.out.println();
         System.out.println("Wprowadź ID:");
 
-        Long id = Long.parseLong(scanner.nextLine()); // id uzytkownika
+        Long id = Long.parseLong(scanner.nextLine());
         return serviceEntityDao.findById(Service.class, id);
     }
 
