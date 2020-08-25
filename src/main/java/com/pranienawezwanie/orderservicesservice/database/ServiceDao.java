@@ -18,17 +18,9 @@ public class ServiceDao {
         SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
         try (Session session = sessionFactory.openSession()) {
 
-            // narzędzie do tworzenia zapytań i kreowania klauzuli 'where'
             CriteriaBuilder cb = session.getCriteriaBuilder();
-
-            // obiekt reprezentujący zapytanie
             CriteriaQuery<Service> criteriaQuery = cb.createQuery(Service.class);
-
-            // obiekt reprezentujący tabelę bazodanową.
-            // do jakiej tabeli kierujemy nasze zapytanie?
             Root<Service> rootTable = criteriaQuery.from(Service.class);
-
-            // wykonanie zapytania
             criteriaQuery.select(rootTable)
                     .where(
                             cb.like(
@@ -37,12 +29,7 @@ public class ServiceDao {
                             )
                     );
 
-            // specification
             list.addAll(session.createQuery(criteriaQuery).list());
-
-            // poznanie uniwersalnego rozwiązania które działa z każdą bazą danych
-            // używanie klas których będziecie używać na JPA (Spring)
-
         } catch (HibernateException he) {
             he.printStackTrace();
         }

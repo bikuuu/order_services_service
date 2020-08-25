@@ -1,14 +1,10 @@
 package com.pranienawezwanie.orderservicesservice.handlers;
 
 import com.pranienawezwanie.orderservicesservice.database.EntityDao;
-import com.pranienawezwanie.orderservicesservice.model.AppUser;
-import com.pranienawezwanie.orderservicesservice.model.Service;
-import com.pranienawezwanie.orderservicesservice.model.ServiceType;
+import com.pranienawezwanie.orderservicesservice.model.*;
 
-import java.util.Scanner;
 
 public class ServiceHandler {
-    private Scanner scanner = new Scanner(System.in);
     private EntityDao<Service> serviceEntityDao = new EntityDao<>();
 
     public void handle(String[] words) {
@@ -29,7 +25,7 @@ public class ServiceHandler {
                 .build();
 
         serviceEntityDao.saveOrUpdate(service);
-        System.out.println("Service aded "+service.getId());
+        System.out.println("Service aded " + service.getId());
     }
 
     private void handleService(String[] words) {

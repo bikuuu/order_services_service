@@ -3,16 +3,13 @@ package com.pranienawezwanie.orderservicesservice.database;
 import com.pranienawezwanie.orderservicesservice.model.AppUser;
 import org.hibernate.*;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AppUserDao {
-    private EntityDao<AppUser> appUserEntityDao = new EntityDao<>();
     private static SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
 
     public boolean existsUserWithLogin(String searchedLogin) {
