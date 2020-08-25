@@ -6,10 +6,11 @@ import com.pranienawezwanie.orderservicesservice.model.ExtraService;
 import com.pranienawezwanie.orderservicesservice.model.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExtraServiceHandler {
 
-        private Scanner scanner = new Scanner(System.in);
+        private static Scanner scanner = new Scanner(System.in);
         private EntityDao<ExtraService> extraServiceEntityDao = new EntityDao<>();
 
     public void handle(String[] words) {
@@ -31,7 +32,7 @@ public class ExtraServiceHandler {
 
             ServiceDao serviceDao = new ServiceDao();
             EntityDao<Service> serviceEntityDao = new EntityDao<>();
-            EntityDao<ExtraService> extraServiceEntityDao = new EntityDao<>();
+            extraServiceEntityDao = new EntityDao<>();
             Optional<Service> optionalService = askUserForService(serviceDao.findAllServicesByName(words[2]), serviceEntityDao);
 
             if (optionalService.isPresent()) {
@@ -44,10 +45,10 @@ public class ExtraServiceHandler {
                     Double additionalCost = Double.parseDouble(scanner.nextLine());
 
                     ExtraService extraService = new ExtraService(name, additionalCost);
-                    extraServiceEntityDao.saveOrUpdate(extraService);       // najpierw zapis nowej encji
+                    extraServiceEntityDao.saveOrUpdate(extraService);
 
-                    service.getAvailableExtraServices().add(extraService);  // dopiero po tym powiązanie z tabelą relacyjną
-                    serviceEntityDao.saveOrUpdate(service);                 // zapis relacji
+                    service.getAvailableExtraServices().add(extraService);
+                    serviceEntityDao.saveOrUpdate(service);
 
                     System.out.println("Czy chcesz dodać kolejną extra usługę? [y/n]");
                     input = scanner.nextLine();
@@ -56,24 +57,41 @@ public class ExtraServiceHandler {
                         input.startsWith("y") ||
                         input.startsWith("t"));
             } else {
-                System.err.println("Wprowadzono niepoprawną usługę");
+                System.err.println("Wprowadzono niepoprawną usługę");
             }
-
         }
 
+    public static Set<ExtraService> getAllExtraServicesFromUser(Service service) {
+        List<ExtraService> extraServices = new ArrayList<>();
+        String input;
+        do {
+            System.out.println("Extra services, enter id:");
+            service.getAvailableExtraServices().forEach(System.out::println);
 
+            Long id = Long.valueOf(scanner.nextLine());
+            extraServices.addAll(
+                    service.getAvailableExtraServices().stream()
+                            .filter(extraService -> extraService.getId() == id)
+                            .collect(Collectors.toSet()));
+            System.out.println("Czy chcesz dodać kolejne usługi? [y/n]");
+            input = scanner.nextLine();
 
-    private Optional<Service> askUserForService(List<Service> allServicesByName, EntityDao<Service> serviceEntityDao) {
+        } while (input.equalsIgnoreCase("y") ||
+                input.equalsIgnoreCase("t") ||
+                input.startsWith("y") ||
+                input.startsWith("t"));
+        return new HashSet<>(extraServices);
+    }
+
+    public static Optional<Service> askUserForService
+            (List<Service> allServicesByName, EntityDao<Service> serviceEntityDao) {
         List<Service> serviceList = allServicesByName;
         System.out.println("To znalezione wyniki, którą usługę wybierasz:");
         serviceList.forEach(System.out::println);
         System.out.println();
         System.out.println("Wprowadź ID:");
 
-        Long id = Long.parseLong(scanner.nextLine()); // id uzytkownika
+        Long id = Long.parseLong(scanner.nextLine());
         return serviceEntityDao.findById(Service.class, id);
     }
-
-
-
 }
